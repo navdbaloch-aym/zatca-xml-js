@@ -10,9 +10,7 @@ const line_item: ZATCASimplifiedInvoiceLineItem = {
     quantity: 5,
     tax_exclusive_price: 10,
     VAT_percent: 0.15,
-    other_taxes: [
-        {percent_amount: 1}
-    ],
+    other_taxes: [], // emptied other taxes to comply with Zatca BR-KSA-84
     discounts: [
         {amount: 2, reason: "A discount"},
         {amount: 2, reason: "A second discount"}
@@ -24,16 +22,16 @@ const egsunit: EGSUnitInfo = {
     uuid: "6f4d20e0-6bfe-4a80-9389-7dabe6620f12",
     custom_id: "EGS1-886431145",
     model: "IOS",
-    CRN_number: "454634645645654",
-    VAT_name: "Wesam Alzahir",
-    VAT_number: "301121971500003",
+    CRN_number: "1010010000",
+    VAT_name: "ABC Company",
+    VAT_number: "399999999900003",
     location: {
-        city: "Khobar",
-        city_subdivision: "West",
-        street: "King Fahahd st",
-        plot_identification: "0000",
-        building: "0000",
-        postal_zone: "31952"
+        city: "city",
+        city_subdivision: "32423423",
+        street: "street",
+        plot_identification: "4323",
+        building: "32423423",
+        postal_zone: "11417"
     },
     branch_name: "My Branch Name",
     branch_industry: "Food"
@@ -74,21 +72,20 @@ const main = async () => {
         const compliance_request_id = await egs.issueComplianceCertificate("123345");
 
         // Sign invoice
-        const {signed_invoice_string, invoice_hash, qr} = egs.signInvoice(invoice);
+        const { signed_invoice_string, invoice_hash, qr } = egs.signInvoice(invoice);
 
         // Check invoice compliance
-        console.log( await egs.checkInvoiceCompliance(signed_invoice_string, invoice_hash) );
+        await egs.checkInvoiceCompliance(signed_invoice_string, invoice_hash)
 
         // Issue production certificate
         const production_request_id = await egs.issueProductionCertificate(compliance_request_id);
-        
-         // Report invoice production
-         // Note: This request currently fails because ZATCA sandbox returns a constant fake production certificate
-        console.log( await egs.reportInvoice(signed_invoice_string, invoice_hash) );
 
-
+        //  // Report invoice production
+        //  // Note: This request currently fails because ZATCA sandbox returns a constant fake production certificate
+        let reportedInvoice = await egs.reportInvoice(signed_invoice_string, invoice_hash);
+        console.log("Reporting Status: ", reportedInvoice?.reportingStatus);
     } catch (error: any) {
-        console.log(error.message ?? error);
+        console.log(JSON.stringify(error?.response?.data || { message: error.message }, null, 2));
     }
 }
 

@@ -80,9 +80,9 @@ class API {
                 {headers: {...auth_headers, ...headers}}
             );
                         
-            if (response.status != 200) throw new Error("Error issuing a compliance certificate.");
+            if (![200, 202].includes(response.status)) throw new Error("Error issuing a compliance certificate.");
 
-            let issued_certificate = new Buffer(response.data.binarySecurityToken, "base64").toString();
+            let issued_certificate = Buffer.from(response.data.binarySecurityToken, "base64").toString();
             issued_certificate = `-----BEGIN CERTIFICATE-----\n${issued_certificate}\n-----END CERTIFICATE-----`;
             const api_secret = response.data.secret;
 
@@ -103,8 +103,8 @@ class API {
                 },
                 {headers: {...auth_headers, ...headers}}
             );
-                        
-            if (response.status != 200) throw new Error("Error in compliance check.");
+
+            if (![200, 202].includes(response.status)) throw new Error("Error in compliance check.");
             return response.data;
         }
         
@@ -127,10 +127,10 @@ class API {
                 {compliance_request_id: compliance_request_id},
                 {headers: {...auth_headers, ...headers}}
             );
-                        
-            if (response.status != 200) throw new Error("Error issuing a production certificate.");
 
-            let issued_certificate = new Buffer(response.data.binarySecurityToken, "base64").toString();
+            if (![200, 202].includes(response.status)) throw new Error("Error issuing a production certificate.");
+
+            let issued_certificate = Buffer.from(response.data.binarySecurityToken, "base64").toString();
             issued_certificate = `-----BEGIN CERTIFICATE-----\n${issued_certificate}\n-----END CERTIFICATE-----`;
             const api_secret = response.data.secret;
 
@@ -153,7 +153,7 @@ class API {
                 {headers: {...auth_headers, ...headers}}
             );
                         
-            if (response.status != 200) throw new Error("Error in reporting invoice.");
+            if (![200, 202].includes(response.status)) throw new Error("Error in reporting invoice.");
             return response.data;
         }
 
