@@ -1,5 +1,5 @@
 {
-  "name": "zatca-xml-js",
+  "name": "zatca-xml-js-nb",
   "version": "0.1.9",
   "description": "An implementation of Saudi Arabia ZATCA's E-Invoicing requirements, processes, and standards.",
   "main": "lib/index.js",
@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wes4m/zatca-xml-js"
+    "url": "https://github.com/navdbaloch-aym/zatca-xml-js"
   },
   "typings": "lib/index.d.ts",
   "keywords": [
