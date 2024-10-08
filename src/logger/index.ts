@@ -1,5 +1,5 @@
 
-const LOGGING = process.env.LOGGING == "1";
+const LOGGING = process.env.ZATCA_LOGGING == "1";
  
 export const log = (type: string, source: string, message: string) => {
     if (!LOGGING) return;
