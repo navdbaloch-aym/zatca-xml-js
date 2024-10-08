@@ -45,6 +45,7 @@ const invoice = new ZATCASimplifiedTaxInvoice({
         invoice_serial_number: "EGS1-886431145-1",
         issue_date: "2022-03-13",
         issue_time: "14:40:40",
+        buyer_name: "Naveed Baloch",
         previous_invoice_hash: "NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ==",
         line_items: [
             line_item,

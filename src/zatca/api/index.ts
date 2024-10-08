@@ -4,8 +4,7 @@ import { cleanUpCertificateString } from "../signing";
 
 const settings = {
     API_VERSION: "V2",
-    SANDBOX_BASEURL: process.env.ZATCA_BASE_URL ?? "https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal",
-    PRODUCTION_BASEURL: "TODO"
+    BASEURL: process.env.ZATCA_BASE_URL ?? "https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal"
 }
 
 interface ComplianceAPIInterface {
@@ -75,7 +74,7 @@ class API {
                 OTP: otp
             };
 
-            const response = await axios.post(`${settings.SANDBOX_BASEURL}/compliance`,
+            const response = await axios.post(`${settings.BASEURL}/compliance`,
                 {csr: Buffer.from(csr).toString("base64")},
                 {headers: {...auth_headers, ...headers}}
             );
@@ -95,7 +94,7 @@ class API {
                 "Accept-Language": "en",
             };
 
-            const response = await axios.post(`${settings.SANDBOX_BASEURL}/compliance/invoices`,
+            const response = await axios.post(`${settings.BASEURL}/compliance/invoices`,
                 {
                     invoiceHash: invoice_hash,
                     uuid: egs_uuid,
@@ -123,7 +122,7 @@ class API {
                 "Accept-Version": settings.API_VERSION
             };
 
-            const response = await axios.post(`${settings.SANDBOX_BASEURL}/production/csids`,
+            const response = await axios.post(`${settings.BASEURL}/production/csids`,
                 {compliance_request_id: compliance_request_id},
                 {headers: {...auth_headers, ...headers}}
             );
@@ -144,7 +143,7 @@ class API {
                 "Clearance-Status": "0"
             };
 
-            const response = await axios.post(`${settings.SANDBOX_BASEURL}/invoices/reporting/single`,
+            const response = await axios.post(`${settings.BASEURL}/invoices/reporting/single`,
                 {
                     invoiceHash: invoice_hash,
                     uuid: egs_uuid,

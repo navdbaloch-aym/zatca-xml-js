@@ -22,7 +22,10 @@ req_extensions = v3_req
 #basicConstraints=CA:FALSE
 #keyUsage = digitalSignature, keyEncipherment
 # Production or Testing Template (TSTZATCA-Code-Signing - ZATCA-Code-Signing)
-1.3.6.1.4.1.311.20.2 = ASN1:UTF8String:SET_PRODUCTION_VALUE
+1.3.6.1.4.1.311.20.2 = ASN1:PRINTABLESTRING:SET_PRODUCTION_VALUE
+[req_ext]
+certificateTemplateName = ASN1:PRINTABLESTRING: SET_PRODUCTION_VALUE
+
 subjectAltName=dirName:dir_sect
 
 [ dir_sect ]
@@ -72,7 +75,7 @@ interface CSRConfigProps {
 export default function populate(props: CSRConfigProps): string {
     let populated_template = template;
     populated_template = populated_template.replace("SET_PRIVATE_KEY_PASS", props.private_key_pass ?? "SET_PRIVATE_KEY_PASS");
-    populated_template = populated_template.replace("SET_PRODUCTION_VALUE", props.production ? "ZATCA-Code-Signing" : "TSTZATCA-Code-Signing");
+    populated_template = populated_template.replaceAll("SET_PRODUCTION_VALUE", props.production ? "ZATCA-Code-Signing" : "TSTZATCA-Code-Signing");
     populated_template = populated_template.replace("SET_EGS_SERIAL_NUMBER", `1-${props.solution_name}|2-${props.egs_model}|3-${props.egs_serial_number}`);
     populated_template = populated_template.replace("SET_VAT_REGISTRATION_NUMBER", props.vat_number);
     populated_template = populated_template.replace("SET_BRANCH_LOCATION", props.branch_location);

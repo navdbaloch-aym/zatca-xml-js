@@ -51,10 +51,6 @@ export class ZATCASimplifiedTaxInvoice {
             this.parseLineItems(props.line_items ?? [], props);
 
         }
-        
-
-      
-
     }
 
     private constructLineItemTotals = (line_item: ZATCASimplifiedInvoiceLineItem) => {
@@ -160,6 +156,7 @@ export class ZATCASimplifiedTaxInvoice {
                         "@_currencyID": "SAR",
                         "#text": line_item_total_tax_exclusive.toFixedNoRounding(2)
                     },
+                    "cac:AllowanceCharge": cacAllowanceCharges,
                     "cac:TaxTotal": cacTaxTotal,
                     "cac:Item": {
                         "cbc:Name": line_item.name,
@@ -170,7 +167,7 @@ export class ZATCASimplifiedTaxInvoice {
                             "@_currencyID": "SAR",
                             "#text": line_item.tax_exclusive_price
                         },
-                        "cac:AllowanceCharge": cacAllowanceCharges
+                       
                     }
                 },
                 line_item_totals: {
@@ -252,19 +249,20 @@ export class ZATCASimplifiedTaxInvoice {
         }
         
         let taxes_total = 0;
+        let taxable_amount_total = 0;
         line_items.map((line_item) => {
             const total_line_item_discount = line_item.discounts?.reduce((p, c) => p+c.amount, 0);
             const taxable_amount = (line_item.tax_exclusive_price * line_item.quantity) - (total_line_item_discount ?? 0);
 
             let tax_amount = line_item.VAT_percent * taxable_amount;
-            addTaxSubtotal(taxable_amount, tax_amount, line_item.VAT_percent);
             taxes_total += parseFloat(tax_amount.toFixedNoRounding(2));
             line_item.other_taxes?.map((tax) => {
                 tax_amount = tax.percent_amount * taxable_amount;
-                addTaxSubtotal(taxable_amount, tax_amount, tax.percent_amount);
                 taxes_total += parseFloat(tax_amount.toFixedNoRounding(2));
             });
+            taxable_amount_total += parseFloat(taxable_amount.toFixedNoRounding(2));
         });
+        addTaxSubtotal(taxable_amount_total, taxes_total, line_items[0].VAT_percent);
 
         // BT-110
         taxes_total = parseFloat(taxes_total.toFixed(2));
