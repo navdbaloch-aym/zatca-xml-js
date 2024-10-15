@@ -179,7 +179,7 @@ export class ZATCASimplifiedTaxInvoice {
     }
 
 
-    private constructLegalMonetaryTotal = (tax_exclusive_subtotal: number, taxes_total: number) => {
+    private constructLegalMonetaryTotal = (tax_exclusive_subtotal: number, taxes_total: number, allowances_total: number) => {
         
         return {
             // BR-DEC-09
@@ -199,7 +199,7 @@ export class ZATCASimplifiedTaxInvoice {
             },
             "cbc:AllowanceTotalAmount": {
                 "@_currencyID": "SAR",
-                "#text": 0
+                "#text": allowances_total
             },
             "cbc:PrepaidAmount": {
                 "@_currencyID": "SAR",
@@ -291,20 +291,22 @@ export class ZATCASimplifiedTaxInvoice {
         
         let total_taxes: number = 0;
         let total_subtotal: number = 0;
+        let total_allowances: number = 0;
 
         let invoice_line_items: any[] = [];
         line_items.map((line_item) => {
             const {line_item_xml, line_item_totals} = this.constructLineItem(line_item);
-            
+            const discountTotal = line_item.discounts?.reduce((pVal, cVal)=> pVal+cVal.amount, 0) || 0;
             total_taxes += parseFloat(line_item_totals.taxes_total.toFixedNoRounding(2));
             total_subtotal += parseFloat(line_item_totals.subtotal.toFixedNoRounding(2));
-
+            total_allowances += parseFloat(discountTotal.toFixedNoRounding(2));
             invoice_line_items.push(line_item_xml);          
         });
 
         // BT-110
         total_taxes = parseFloat(total_taxes.toFixed(2))
         total_subtotal = parseFloat(total_subtotal.toFixed(2))
+        total_allowances = parseFloat(total_allowances.toFixed(2))
 
         if(props.cancelation) {
             // Invoice canceled. Tunred into credit/debit note. Must have PaymentMeans
@@ -319,7 +321,8 @@ export class ZATCASimplifiedTaxInvoice {
 
         this.invoice_xml.set("Invoice/cac:LegalMonetaryTotal", true, this.constructLegalMonetaryTotal(
             total_subtotal,
-            total_taxes
+            total_taxes,
+            total_allowances
         ));
 
         invoice_line_items.map((line_item) => {
