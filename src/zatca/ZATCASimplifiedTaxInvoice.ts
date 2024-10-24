@@ -305,9 +305,9 @@ export class ZATCASimplifiedTaxInvoice {
         });
 
         // BT-110
-        total_taxes = parseFloat(total_taxes.toFixed(2))
-        total_subtotal = parseFloat(total_subtotal.toFixed(2))
-        total_allowances = parseFloat(total_allowances.toFixed(2))
+        total_taxes = parseFloat(total_taxes.toFixedNoRounding(2))
+        total_subtotal = parseFloat(total_subtotal.toFixedNoRounding(2))
+        total_allowances = parseFloat(total_allowances.toFixedNoRounding(2))
 
         if(props.cancelation) {
             // Invoice canceled. Tunred into credit/debit note. Must have PaymentMeans
