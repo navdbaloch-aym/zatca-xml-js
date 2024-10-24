@@ -262,7 +262,8 @@ export class ZATCASimplifiedTaxInvoice {
             });
             taxable_amount_total += parseFloat(taxable_amount.toFixedNoRounding(2));
         });
-        addTaxSubtotal(taxable_amount_total, taxes_total, line_items[0].VAT_percent);
+        const tax_percentage = line_items.map(li => li.VAT_percent).sort((a,b)=>b-a)[0];
+        addTaxSubtotal(taxable_amount_total, taxes_total, tax_percentage);
 
         // BT-110
         taxes_total = parseFloat(taxes_total.toFixed(2));
