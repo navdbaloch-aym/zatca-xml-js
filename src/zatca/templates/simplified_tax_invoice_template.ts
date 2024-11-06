@@ -145,7 +145,7 @@ export interface ZATCASimplifiedInvoiceProps {
     cancelation?: ZATCASimplifiedInvoicCancelation,
     buyer_name: string;
     payment_method: ZATCAPaymentMethods,
-    allowance_total?: number;
+    allowance_total?: number
 }
 
 export default function populate(props: ZATCASimplifiedInvoiceProps): string {
