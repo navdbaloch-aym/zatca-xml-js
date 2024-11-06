@@ -76,6 +76,21 @@ const template = /* XML */`
             </cac:PartyLegalEntity>
             </cac:Party>
     </cac:AccountingCustomerParty>
+     <cac:PaymentMeans>
+        <cbc:PaymentMeansCode>10</cbc:PaymentMeansCode>
+    </cac:PaymentMeans>
+    <cac:AllowanceCharge>
+        <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+        <cbc:AllowanceChargeReason>discount</cbc:AllowanceChargeReason>
+        <cbc:Amount currencyID="SAR">SET_ALLOWANCE_AMOUNT</cbc:Amount>
+        <cac:TaxCategory>
+            <cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5305">S</cbc:ID>
+            <cbc:Percent>15.0</cbc:Percent>
+            <cac:TaxScheme>
+                <cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+            </cac:TaxScheme>
+        </cac:TaxCategory>
+    </cac:AllowanceCharge>
 </Invoice>
 `;
 
@@ -129,6 +144,8 @@ export interface ZATCASimplifiedInvoiceProps {
     line_items?: ZATCASimplifiedInvoiceLineItem[],
     cancelation?: ZATCASimplifiedInvoicCancelation,
     buyer_name: string;
+    payment_method: ZATCAPaymentMethods,
+    allowance_total?: number;
 }
 
 export default function populate(props: ZATCASimplifiedInvoiceProps): string {
