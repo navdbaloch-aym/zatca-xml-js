@@ -79,33 +79,21 @@ const template = /* XML */`
      <cac:PaymentMeans>
         <cbc:PaymentMeansCode>10</cbc:PaymentMeansCode>
     </cac:PaymentMeans>
-    <cac:AllowanceCharge>
-        <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-        <cbc:AllowanceChargeReason>discount</cbc:AllowanceChargeReason>
-        <cbc:Amount currencyID="SAR">SET_ALLOWANCE_AMOUNT</cbc:Amount>
-        <cac:TaxCategory>
-            <cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5305">S</cbc:ID>
-            <cbc:Percent>15.0</cbc:Percent>
-            <cac:TaxScheme>
-                <cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
-            </cac:TaxScheme>
-        </cac:TaxCategory>
-    </cac:AllowanceCharge>
 </Invoice>
 `;
 
 // 11.2.5 Payment means type code
 export enum ZATCAPaymentMethods {
-    CASH="10",
-    CREDIT="30",
-    BANK_ACCOUNT="42",
-    BANK_CARD="48"
+    CASH = "10",
+    CREDIT = "30",
+    BANK_ACCOUNT = "42",
+    BANK_CARD = "48"
 }
 
-export enum ZATCAInvoiceTypes{
-    INVOICE="388",
-    DEBIT_NOTE="383",
-    CREDIT_NOTE="381"
+export enum ZATCAInvoiceTypes {
+    INVOICE = "388",
+    DEBIT_NOTE = "383",
+    CREDIT_NOTE = "381"
 }
 
 export interface ZATCASimplifiedInvoiceLineItemDiscount {
@@ -127,7 +115,7 @@ export interface ZATCASimplifiedInvoiceLineItem {
     VAT_percent: number,
 }
 
-export interface ZATCASimplifiedInvoicCancelation{
+export interface ZATCASimplifiedInvoicCancelation {
     canceled_invoice_number: number,
     payment_method: ZATCAPaymentMethods,
     cancelation_type: ZATCAInvoiceTypes,
@@ -153,7 +141,7 @@ export default function populate(props: ZATCASimplifiedInvoiceProps): string {
 
     populated_template = populated_template.replace("SET_INVOICE_TYPE", props.cancelation ? props.cancelation.cancelation_type : ZATCAInvoiceTypes.INVOICE);
     // if canceled (BR-KSA-56) set reference number to canceled invoice
-    if(props.cancelation) {
+    if (props.cancelation) {
         populated_template = populated_template.replace("SET_BILLING_REFERENCE", defaultBillingReference(props.cancelation.canceled_invoice_number));
     } else {
         populated_template = populated_template.replace("SET_BILLING_REFERENCE", "");
