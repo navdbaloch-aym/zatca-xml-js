@@ -266,7 +266,7 @@ export class ZATCASimplifiedTaxInvoice {
         addTaxSubtotal(taxable_amount_total, taxes_total, tax_percentage);
 
         // BT-110
-        taxes_total = parseFloat(taxes_total.toFixed(2));
+        taxes_total = parseFloat(taxes_total.toFixedNoRounding(2));
 
         // BR-DEC-13, MESSAGE : [BR-DEC-13]-The allowed maximum number of decimals for the Invoice total VAT amount (BT-110) is 2.
         return [
@@ -274,7 +274,7 @@ export class ZATCASimplifiedTaxInvoice {
                 // Total tax amount for the full invoice
                 "cbc:TaxAmount": {
                     "@_currencyID": "SAR",
-                    "#text": taxes_total.toFixedNoRounding(2)
+                    "#text": taxes_total
                 },
                 "cac:TaxSubtotal": cacTaxSubtotal,
             },
@@ -282,7 +282,7 @@ export class ZATCASimplifiedTaxInvoice {
                 // KSA Rule for VAT tax
                 "cbc:TaxAmount": {
                     "@_currencyID": "SAR",
-                    "#text": taxes_total.toFixedNoRounding(2)
+                    "#text": taxes_total
                 }
             }
         ];
