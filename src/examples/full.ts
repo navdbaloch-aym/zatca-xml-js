@@ -2,18 +2,20 @@ import { EGS, EGSUnitInfo } from "../zatca/egs";
 import { ZATCASimplifiedInvoiceLineItem } from "../zatca/templates/simplified_tax_invoice_template";
 import { ZATCASimplifiedTaxInvoice } from "../zatca/ZATCASimplifiedTaxInvoice";
 import { generatePhaseOneQR } from "../zatca/qr";
+import { writeFileSync } from 'fs';
 
 // Sample line item
 const line_item: ZATCASimplifiedInvoiceLineItem = {
     id: "1",
     name: "TEST NAME",
-    quantity: 5,
-    tax_exclusive_price: 10,
+    quantity: 1,
+    price: 20,
+    tax: 2.6,
+    total_price: 20 * 1,
+    total_tax: 2.6,
     VAT_percent: 0.15,
     other_taxes: [], // emptied other taxes to comply with Zatca BR-KSA-84
     discounts: [
-        {amount: 2, reason: "A discount"},
-        {amount: 2, reason: "A second discount"}
     ]
 };
 
@@ -30,7 +32,7 @@ const egsunit: EGSUnitInfo = {
         city_subdivision: "32423423",
         street: "street",
         plot_identification: "4323",
-        building: "32423423",
+        building: "1545",
         postal_zone: "11417"
     },
     branch_name: "My Branch Name",
@@ -41,6 +43,10 @@ const egsunit: EGSUnitInfo = {
 const invoice = new ZATCASimplifiedTaxInvoice({
     props: {
         egs_info: egsunit,
+        allowance_total: 10,
+        total_exl_amount: 500 - 65.2,
+        total_tax: 65.2,
+        total_inclusive_amount: 500,
         invoice_counter_number: 1,
         invoice_serial_number: "EGS1-886431145-1",
         issue_date: "2022-03-13",
@@ -48,9 +54,44 @@ const invoice = new ZATCASimplifiedTaxInvoice({
         buyer_name: "Naveed Baloch",
         previous_invoice_hash: "NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ==",
         line_items: [
-            line_item,
-            line_item,
-            line_item
+            {
+                id: "1",
+                name: "item1",
+                quantity: 10,
+                price: 25,
+                tax: 3.26,
+                total_price: 25 * 10,
+                total_tax: 3.26 * 10,
+                VAT_percent: 0.15,
+                other_taxes: [], // emptied other taxes to comply with Zatca BR-KSA-84
+                discounts: []
+            },
+            {
+                id: "2",
+                name: "item2",
+                quantity: 10,
+                price: 25,
+                tax: 3.26,
+                total_price: 25 * 10,
+                total_tax: 3.26 * 10,
+                VAT_percent: 0.15,
+                other_taxes: [], // emptied other taxes to comply with Zatca BR-KSA-84
+                discounts: [
+                ]
+            },
+            {
+                id: "1",
+                name: "Delivery charges",
+                quantity: 1,
+                price: 20,
+                tax: (20 * 0.15),
+                total_price: 20,
+                total_tax: (20 * 0.15),
+                VAT_percent: 0.15,
+                other_taxes: [], // emptied other taxes to comply with Zatca BR-KSA-84
+                discounts: [
+                ]
+            }
         ]
     }
 });
@@ -74,7 +115,7 @@ const main = async () => {
 
         // Sign invoice
         const { signed_invoice_string, invoice_hash, qr } = egs.signInvoice(invoice);
-
+        writeFileSync('invoice.xml', signed_invoice_string);
         // Check invoice compliance
         await egs.checkInvoiceCompliance(signed_invoice_string, invoice_hash)
 

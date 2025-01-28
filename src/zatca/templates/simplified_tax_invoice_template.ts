@@ -109,7 +109,10 @@ export interface ZATCASimplifiedInvoiceLineItem {
     id: string,
     name: string,
     quantity: number,
-    tax_exclusive_price: number,
+    price: number,
+    tax: number,
+    total_price: number,
+    total_tax: number,
     other_taxes?: ZATCASimplifiedInvoiceLineItemTax[],
     discounts?: ZATCASimplifiedInvoiceLineItemDiscount[]
     VAT_percent: number,
@@ -133,7 +136,13 @@ export interface ZATCASimplifiedInvoiceProps {
     cancelation?: ZATCASimplifiedInvoicCancelation,
     buyer_name: string;
     payment_method?: ZATCAPaymentMethods,
-    allowance_total?: number
+    // Total Allowance on invoice level
+    allowance_total?: number,
+    // Total Amount including the tax
+    total_inclusive_amount: number,
+    // Total amount excluding the tax
+    total_exl_amount: number,
+    total_tax: number
 }
 
 export default function populate(props: ZATCASimplifiedInvoiceProps): string {
