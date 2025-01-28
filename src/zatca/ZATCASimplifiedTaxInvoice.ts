@@ -165,7 +165,7 @@ export class ZATCASimplifiedTaxInvoice {
                 "cac:Price": {
                     "cbc:PriceAmount": {
                         "@_currencyID": "SAR",
-                        "#text": line_item.tax_exclusive_price
+                        "#text": line_item.tax_exclusive_price.toFixedNoRounding(2)
                     },
 
                 }
