@@ -142,7 +142,8 @@ export interface ZATCASimplifiedInvoiceProps {
     total_inclusive_amount: number,
     // Total amount excluding the tax
     total_exl_amount: number,
-    total_tax: number
+    total_tax: number,
+    delivery_charges?: number,
 }
 
 export default function populate(props: ZATCASimplifiedInvoiceProps): string {

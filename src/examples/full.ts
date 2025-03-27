@@ -93,19 +93,6 @@ const lineItems = [
         other_taxes: [], // emptied other taxes to comply with Zatca BR-KSA-84
         discounts: [
         ]
-    },
-    {
-        id: "1",
-        name: "Delivery charges",
-        quantity: 1,
-        price: 20,
-        tax: 20 - calculateTaxExcPrice(20),
-        total_price: 20,
-        total_tax: (20 - calculateTaxExcPrice(20)),
-
-        VAT_percent: 0.15,
-        other_taxes: [], // emptied other taxes to comply with Zatca BR-KSA-84
-        discounts: []
     }
 ];
 // Sample Invoice
@@ -115,14 +102,15 @@ const invoice = new ZATCASimplifiedTaxInvoice({
         // allowance_total: 100,
         total_exl_amount: 520-67.8268696,
         total_tax: 67.82608696,
-        total_inclusive_amount: 520,
+        total_inclusive_amount: 500,
         invoice_counter_number: 1,
         invoice_serial_number: "EGS1-886431145-1",
         issue_date: "2022-03-13",
         issue_time: "14:40:40",
         buyer_name: "Naveed Baloch",
         previous_invoice_hash: "NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ==",
-        line_items: lineItems
+        line_items: lineItems,
+        delivery_charges : 20
     }
 });
 console.log(invoice)

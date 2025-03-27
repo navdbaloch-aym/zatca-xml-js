@@ -175,7 +175,7 @@ export class ZATCASimplifiedTaxInvoice {
     }
 
 
-    private constructLegalMonetaryTotal = (tax_inclusive_subtotal: number, taxes_total: number, allowances_total: number) => {
+    private constructLegalMonetaryTotal = (tax_inclusive_subtotal: number, taxes_total: number, allowances_total: number, charges_total: number) => {
         const tax_exl_amount = (tax_inclusive_subtotal - taxes_total).toFixed(2);
         return {
             // BR-DEC-09
@@ -196,6 +196,10 @@ export class ZATCASimplifiedTaxInvoice {
             "cbc:AllowanceTotalAmount": {
                 "@_currencyID": "SAR",
                 "#text": allowances_total
+            },
+            "cbc:ChargeTotalAmount": {
+                "@_currencyID": "SAR",
+                "#text": charges_total
             },
             "cbc:PrepaidAmount": {
                 "@_currencyID": "SAR",
@@ -327,13 +331,28 @@ export class ZATCASimplifiedTaxInvoice {
             });
         }
 
+        if (props.delivery_charges) {
+            this.invoice_xml.set("Invoice/cac:AllowanceCharge", false, {
+                "cbc:ChargeIndicator": true,
+                "cbc:AllowanceChargeReason": 'Delivery Charges',
+                "cbc:Amount": {
+                    "@_currencyID": "SAR",
+                    // BR-DEC-01
+                    "#text": props.delivery_charges.toFixedNoRounding(2)
+                }
+            });
+        }
+
         this.invoice_xml.set("Invoice/cac:TaxTotal", false, this.constructTaxTotal(line_items, props));
 
         this.invoice_xml.set("Invoice/cac:LegalMonetaryTotal", true, this.constructLegalMonetaryTotal(
             total_inclusive_amount,
             total_taxes,
-            line_total_allowances + (props.allowance_total ?? 0)
+            line_total_allowances + (props.allowance_total ?? 0),
+            (props.delivery_charges ?? 0)
         ));
+
+
 
         invoice_line_items.map((line_item) => {
             this.invoice_xml.set("Invoice/cac:InvoiceLine", false, line_item);
